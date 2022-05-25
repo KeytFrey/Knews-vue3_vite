@@ -20,11 +20,14 @@
    </ul>
  </div>
 </template>
+
 <script lang="ts" setup>
   import { reactive, ref } from "vue";
   import INews from "../interface/news.interface";
-  import AddNewsForm from "../components/addNewsForm.vue"
+  import AddNewsForm from "./addNewsForm.vue"
+
   let addNewsFormShow = ref(false)
+
   let newsall = reactive<INews[]>([
       {
           id: "f8e8b4cc-a279-493f-b8c1-ae1e0de5758e",
@@ -39,7 +42,7 @@
           ownerId: "8fcc0e4a-8595-4221-80dd-2e35f6315ebf"
       }
   ]);
-  
+
   const handleAdd = (news: INews) => {
     newsall.push(news)
     addNewsFormShow.value = false
@@ -82,16 +85,16 @@
     height: 20px;
   }
     .btn--edit {
-      background: url('/public/img/icon/edit_white.svg') no-repeat center center / cover;
+      background: url('/img/icon/edit_white.svg') no-repeat center center / cover;
     }
     .btn--edit:hover {
-      background: url('/public/img/icon/edit_black.svg') no-repeat center center / cover;
+      background: url('/img/icon/edit_black.svg') no-repeat center center / cover;
     }
     .btn--exit {
-      background: url('/public/img/icon/exit_white.svg') no-repeat center center / cover;
+      background: url('/img/icon/exit_white.svg') no-repeat center center / cover;
     }
      .btn--exit:hover {
-      background: url('/public/img/icon/exit_black.svg') no-repeat center center / cover;
+      background: url('/img/icon/exit_black.svg') no-repeat center center / cover;
     }
   .title {
     margin-bottom: 10px;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NewsView from './View/NewsView.vue';
+import NewsView from './view/NewsView.vue';
 </script>
 
 <template>

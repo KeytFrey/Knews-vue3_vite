@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleAdd() handleUp()">
+  <form @submit.prevent="handleChange">
     <input class="title" placeholder="Введите тему новости" v-model="title" />
     <textarea class="description" placeholder="Введите описание новости" v-model="description"></textarea>
     <button class="btn">Сохранить</button>
@@ -8,43 +8,32 @@
 
 <script lang="ts" setup>
 
-import { onMounted, ref } from "@vue/runtime-dom";
+import { ref } from "@vue/runtime-dom";
 import INews from "../interface/news.interface";
 import { v4 as uuidv4 } from 'uuid';
 
-  const props = defineProps({
-    newsData: {
-      type: Object
-    }
-  })
-
-const title = ref("")
-const description = ref("")
-
-
-
-onMounted(() => {
-  console.log(props)
-}) 
-
-const emit = defineEmits<{
-  (e: 'onNewsAdd' , news: INews): void;
-  (e: 'onNewsUp' , newsData): void;
-}>();
-
-const handleAdd = () => {
-  emit('onNewsAdd', {
-    id: uuidv4(),
-    title: title.value,
-    description: description.value
-  
-  })
+interface Props {
+  newsData?: {
+    id: string;
+    title: string;
+    description: string;
+  }
 }
 
-  const handleUp = () => {
-  emit('onNewsUp', {
-    title: "",
-    description: ""
+const emit = defineEmits<{
+  (e: 'onChange' , news: INews): void;
+}>();
+
+const {newsData} = defineProps<Props>();
+
+const title = ref(newsData ? newsData.title : "");
+const description = ref(newsData ? newsData.description : "");
+
+const handleChange = () => {
+  emit('onChange', {
+    id: newsData ? newsData.id : uuidv4(),
+    title: title.value,
+    description: description.value
   })
 }
 </script>

@@ -6,7 +6,7 @@
    </button>
    <AddNewsForm
       v-else 
-      @onNewsAdd="handleAdd" 
+      @onChange="handleAdd" 
       />
    <ul class="news-all">
      <li class="news"
@@ -17,7 +17,7 @@
     <button class="btn btn--edit" @click="upNewsFormShow = true" v-if="!upNewsFormShow"></button>
     <AddNewsForm
       v-else
-      @onNewsUp="handleUp"
+      @onChange="handleUp"
       :newsData="news"
     />
           <button class=" btn btn--exit" @click="handleDel(news.id)"></button>
@@ -28,6 +28,7 @@
    </ul>
  </div>
 </template>
+
 <script lang="ts" setup>
   import { reactive, ref } from "vue";
   import INews from "../interface/news.interface";
@@ -35,17 +36,18 @@
 
   let addNewsFormShow = ref(false)
   let upNewsFormShow = ref(false)
+
   let newsall = reactive<INews[]>([
       {
           id: "f8e8b4cc-a279-493f-b8c1-ae1e0de5758e",
-          title: "Название новости",
-          description: "Описание новости",
+          title: "Название новости 1",
+          description: "Описание новости 1",
           ownerId: "8fcc0e4a-8595-4221-80dd-2e35f6315ebf"
       },
       {
-          id: "f8e8b4cc-a279-493f-b8c1-ae1e0de5758e",
-          title: "Название новости",
-          description: "Описание новости",
+          id: "20ff965d-b53d-41ac-a65a-4dc32411519c",
+          title: "Название новости 2",
+          description: "Описание новости 2",
           ownerId: "8fcc0e4a-8595-4221-80dd-2e35f6315ebf"
       }
   ])
@@ -55,7 +57,7 @@
     addNewsFormShow.value = false
   }
 
-    const handleUp = (news: INews) => {
+  const handleUp = (news: INews) => {
     upNewsFormShow.value = false
   }
 
@@ -111,19 +113,19 @@
   }
 
     .btn--edit {
-      background: url('/public/img/icon/edit_white.svg') no-repeat center center / cover;
+      background: url('/img/icon/edit_white.svg') no-repeat center center / cover;
     }
 
     .btn--edit:hover {
-      background: url('/public/img/icon/edit_black.svg') no-repeat center center / cover;
+      background: url('/img/icon/edit_black.svg') no-repeat center center / cover;
     }
 
     .btn--exit {
-      background: url('/public/img/icon/exit_white.svg') no-repeat center center / cover;
+      background: url('/img/icon/exit_white.svg') no-repeat center center / cover;
     }
 
      .btn--exit:hover {
-      background: url('/public/img/icon/exit_black.svg') no-repeat center center / cover;
+      background: url('/img/icon/exit_black.svg') no-repeat center center / cover;
     }
 
   .title {
