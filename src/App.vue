@@ -16,7 +16,7 @@ body {
   margin: 0 auto;
   padding: 10px;
   width: 650px;
-  height: 100vh;
+  height: 100%;
 
   font-size: 16px;
   background-color: #e5e5e5;
@@ -41,6 +41,29 @@ ul {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+input,
+textarea {
+  padding: 0;
+  margin-bottom: 10px;
+  min-width: 200px;
+  width: 200px;
+  height: 20px;
+  border: none;
+  background: none;
+  border-bottom: 1px solid #bebeff;
+  outline: none;
+}
+
+
+form {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin: 0 0 0 auto;
+  width: 200px;
+  height: auto;
 }
 
 .btn:hover {
