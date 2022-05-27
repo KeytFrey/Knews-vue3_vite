@@ -1,64 +1,33 @@
-<template>
- <div>
-   <h1>Новости</h1>
-   <button class="btn btn--add" @click="addNewsFormShow = true" v-if="!addNewsFormShow">
-      Добавить новость
-   </button>
-   <AddNewsForm
-      v-else 
-      @onChange="handleAdd" 
-      />
-   <ul class="news-all">
-     <li class="news"
-        v-for ="news in newsall" 
-        :key="news.id"
-      >
-      <div class="news__btn">
-    <button class="btn btn--edit" @click="upNewsFormShow = true" v-if="!upNewsFormShow"></button>
-    <AddNewsForm
-      v-else
-      @onChange="handleUp"
-      :newsData="news"
-    />
-          <button class=" btn btn--exit" @click="handleDel(news.id)"></button>
-      </div>
-      <h2 class="title"> {{news.title}} </h2>
-      <p class="description"> {{news.description}}</p>
-      </li>
-   </ul>
- </div>
-</template>
-
 <script lang="ts" setup>
   import { reactive, ref } from "vue";
   import INews from "../interface/news.interface";
   import AddNewsForm from "../components/addNewsForm.vue"
 
   let addNewsFormShow = ref(false)
-  let upNewsFormShow = ref(false)
+  const newsData = ref<INews>()
 
-  let newsall = reactive<INews[]>([
-      {
-          id: "f8e8b4cc-a279-493f-b8c1-ae1e0de5758e",
-          title: "Название новости 1",
-          description: "Описание новости 1",
-          ownerId: "8fcc0e4a-8595-4221-80dd-2e35f6315ebf"
-      },
-      {
-          id: "20ff965d-b53d-41ac-a65a-4dc32411519c",
-          title: "Название новости 2",
-          description: "Описание новости 2",
-          ownerId: "8fcc0e4a-8595-4221-80dd-2e35f6315ebf"
-      }
-  ])
+  let newsall = reactive<INews[]>([])
+
+  fetch('http://localhost:8080/api/rest/news').then( async (res) => {
+    newsall.push(...await res.json())
+  })
 
   const handleAdd = (news: INews) => {
-    newsall.push(news)
+    const index = newsall.findIndex((item) => {
+      return  item.id === news.id;
+    });
+    if(index == -1) {
+      newsall.push(news)
+    } else {
+      newsall.splice(index, 1, news);
+    }
+
     addNewsFormShow.value = false
   }
 
-  const handleUp = (news: INews) => {
-    upNewsFormShow.value = false
+  const handleEdit= (news: INews) => {
+    addNewsFormShow.value = true
+    newsData.value = news
   }
 
   const handleDel = (id: string) => {
@@ -73,6 +42,33 @@
   }
   
 </script>
+
+<template>
+ <div>
+   <h1>Новости</h1>
+   <button class="btn btn--add" @click="addNewsFormShow = true" v-if="!addNewsFormShow">
+      Добавить новость
+   </button>
+   <AddNewsForm
+      v-else
+      @onChange="handleAdd"
+      :newsData="newsData"
+    />
+   <ul class="news-all">
+     <li class="news"
+        v-for ="news in newsall" 
+        :key="news.id"
+      >
+      <div class="news__btn">
+        <button class="btn btn--edit" @click="handleEdit(news)"></button>
+        <button class=" btn btn--exit" @click="handleDel(news.id)"></button>
+      </div>
+      <h2 class="title"> {{news.title}} </h2>
+      <p class="description"> {{news.description}}</p>
+      </li>
+   </ul>
+ </div>
+</template>
 
 <style scoped>
 .btn--add {

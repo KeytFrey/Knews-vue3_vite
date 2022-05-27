@@ -1,11 +1,3 @@
-<template>
-  <form @submit.prevent="handleChange">
-    <input class="title" placeholder="Введите тему новости" v-model="title" />
-    <textarea class="description" placeholder="Введите описание новости" v-model="description"></textarea>
-    <button class="btn">Сохранить</button>
-  </form>
-</template>
-
 <script lang="ts" setup>
 
 import { ref } from "@vue/runtime-dom";
@@ -37,3 +29,11 @@ const handleChange = () => {
   })
 }
 </script>
+
+<template>
+  <form @submit.prevent="handleChange">
+    <input class="title" placeholder="Введите тему новости" v-model="title" />
+    <textarea class="description" placeholder="Введите описание новости" v-model="description"></textarea>
+    <button class="btn">Сохранить</button>
+  </form>
+</template>
