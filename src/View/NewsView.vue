@@ -8,66 +8,94 @@
 
   let newsall = reactive<INews[]>([])
 
-  fetch('http://localhost:8080/api/rest/news').then( async (res) => {
-    newsall.push(...await res.json())
-  })
-
-  const handleAdd = (news: INews) => {
-    const index = newsall.findIndex((item) => {
-      return  item.id === news.id;
-    });
-    if(index == -1) {
-      newsall.push(news)
-    } else {
-      newsall.splice(index, 1, news);
-    }
-
-    addNewsFormShow.value = false
+  const loadNews = async () => {
+    await fetch('http://localhost:8080/api/rest/news', {method: 'GET'}).then( async (res) => {
+      newsall.splice(0, newsall.length, ...await res.json())
+    })
   }
 
-  const handleEdit= (news: INews) => {
+  await loadNews()
+
+  const handleAdd = async (news: INews) => {
+    addNewsFormShow.value = false
+    if(news.id) {
+      console.log(news)
+      const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: news.title,
+            description: news.description,
+            ownerId: news.ownerId
+      })
+      }
+      await fetch(`http://localhost:8080/api/rest/news/${news.id}`, requestOptions).then(newsall => newsall.json())
+    } else {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: news.title,
+            description: news.description,
+            ownerId: news.ownerId
+        })
+      }
+      await fetch(`http://localhost:8080/api/rest/news`, requestOptions).then(newsall => newsall.json())
+    }
+    await loadNews()
+    // const index = newsall.findIndex((item) => {
+    //   return  item.id === news.id;
+    // })
+    // if(index == -1) {
+    //   newsall.push(news)
+    // } else {
+    //   newsall.splice(index, 1, news);
+    // }
+  }
+
+  const handleEdit = async (news: INews) => {
     addNewsFormShow.value = true
     newsData.value = news
   }
 
-  const handleDel = (id: string) => {
-    const index = newsall.findIndex((news) => {
-      return news.id === id;
-    });
-    if (index == -1) {
-      return null;
-    } else {
-      newsall.splice(index, 1);
-    }
+  const handleDel = async (id: string) => {
+    await fetch(`http://localhost:8080/api/rest/news/${id}`, { method: 'DELETE' }).then(() => {})
+    await loadNews()
+    // const index = newsall.findIndex((news) => {
+    //   return news.id === id;
+    // });
+    // if (index == -1) {
+    //   return null;
+    // } else {
+    //   newsall.splice(index, 1);
+    // }
   }
-  
+
 </script>
 
 <template>
- <div>
-   <h1>Новости</h1>
-   <button class="btn btn--add" @click="addNewsFormShow = true" v-if="!addNewsFormShow">
-      Добавить новость
-   </button>
-   <AddNewsForm
-      v-else
-      @onChange="handleAdd"
-      :newsData="newsData"
-    />
-   <ul class="news-all">
-     <li class="news"
-        v-for ="news in newsall" 
-        :key="news.id"
-      >
-      <div class="news__btn">
-        <button class="btn btn--edit" @click="handleEdit(news)"></button>
-        <button class=" btn btn--exit" @click="handleDel(news.id)"></button>
-      </div>
-      <h2 class="title"> {{news.title}} </h2>
-      <p class="description"> {{news.description}}</p>
-      </li>
-   </ul>
- </div>
+  <h1>Новости</h1>
+  <button class="btn btn--add" @click="addNewsFormShow = true" v-if="!addNewsFormShow">
+    Добавить новость
+  </button>
+  <AddNewsForm
+    v-else
+    @onChange="handleAdd"
+    :newsData="newsData"
+  />
+  <ul class="news-all">
+    <li class="news"
+      v-for ="news in newsall" 
+      :key="news.id"
+    >
+    <div class="news__btn">
+      <button class="btn btn--edit" @click="handleEdit(news)"></button>
+      <button class=" btn btn--exit" @click="handleDel(news.id)"></button>
+    </div>
+    <h2 class="title"> {{news.title}} </h2>
+    <p class="description"> {{news.description}}</p>
+    </li>
+  </ul>
 </template>
 
 <style scoped>

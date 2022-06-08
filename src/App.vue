@@ -3,7 +3,9 @@ import NewsView from './view/NewsView.vue';
 </script>
 
 <template>
-  <NewsView />
+  <Suspense>
+    <NewsView />
+  </Suspense>
 </template>
 
 <style>

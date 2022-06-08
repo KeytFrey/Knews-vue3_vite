@@ -9,11 +9,12 @@ interface Props {
     id: string;
     title: string;
     description: string;
+    ownerId?: string;
   }
 }
 
 const emit = defineEmits<{
-  (e: 'onChange' , news: INews): void;
+  (e: 'onChange', news: INews): void;
 }>();
 
 const {newsData} = defineProps<Props>();
@@ -21,11 +22,13 @@ const {newsData} = defineProps<Props>();
 const title = ref(newsData ? newsData.title : "");
 const description = ref(newsData ? newsData.description : "");
 
+
 const handleChange = () => {
   emit('onChange', {
-    id: newsData ? newsData.id : uuidv4(),
+    id: newsData ? newsData.id : '',
     title: title.value,
-    description: description.value
+    description: description.value,
+    ownerId: uuidv4()
   })
 }
 </script>
